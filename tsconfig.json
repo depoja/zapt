@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "commonjs",
+    "target": "es2019",
+    "lib": ["es2019"],
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "declaration": true,
+    "typeRoots": ["node_modules/@types", "./src/@types"]
+  },
+  "include": ["./src/index.ts"],
+  "exclude": ["node_modules"]
+}
