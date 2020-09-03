@@ -1,17 +1,22 @@
-import rawy from "./rawy";
-import url from "./url";
+import Kefir from "kefir";
+import send from "../lib/send";
+import * as streams from "../lib/streams";
 
-const app = rawy();
+import * as app from "./app";
 
-app.router.get("/:name", (req, _, params) => {
-  // const { query } = url(req);
-  return { name: params.name, age: 30 };
-});
+// const app = server().map(cors()).map(security());
+const server = streams.server(3000);
 
-app.use("test", (req) => {
-  // console.log(req);
-});
+const root = server.r("GET", "/").map((ctx) => [ctx, "Root"]);
+const hello = server.r(["GET", "POST"], "/hello/:name").map((ctx) => [ctx, app.hello(ctx.params)]);
 
-app.server.listen(3000, () => {
-  console.log("opps");
+// @ts-ignore
+const api = Kefir.merge([root, hello]);
+
+// @ts-ignore
+api.onValue(async ([ctx, val]) => {
+  const data = await Promise.resolve(val);
+
+  // @ts-ignore
+  send(ctx.res, data);
 });

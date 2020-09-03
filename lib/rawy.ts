@@ -1,6 +1,5 @@
 import Router from "find-my-way";
-import { createServer } from "http";
-import { IncomingMessage, ServerResponse } from "http";
+import { createServer, IncomingMessage, ServerResponse } from "http";
 
 import send from "./send";
 
@@ -8,7 +7,7 @@ const apply = async (res: ServerResponse, result: any) => {
   if (res.finished) return; // In case the handler manually called 'send'
 
   const data = await Promise.resolve(result); // If the result is a promise or value, await both cases
-  send(res, res.statusCode || 200, data);
+  send(res, data, res.statusCode || 200);
 };
 
 export default () => {

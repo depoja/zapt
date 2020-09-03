@@ -2,7 +2,11 @@ import { STATUS_CODES, ServerResponse } from "http";
 import { Stream } from "stream";
 
 const TYPE = "content-type";
-const OSTREAM = "application/octet-stream";
+const TYPES = {
+  OSTREAM: "application/octet-stream",
+  JSON: "application/json;charset=utf-8",
+  TEXT: "text/plain",
+};
 
 type Data = string | object | Buffer | Stream;
 type Obj = {
@@ -10,7 +14,7 @@ type Obj = {
   [errorCode: string]: string | number | string[];
 };
 
-export default (res: ServerResponse, code = 200, data: Data = "", headers: Obj = {}) => {
+export default (res: ServerResponse, data: Data = "", code = 200, headers: Obj = {}) => {
   const obj: Obj = {};
 
   for (const k in headers) {
@@ -20,22 +24,22 @@ export default (res: ServerResponse, code = 200, data: Data = "", headers: Obj =
   let type = obj[TYPE] || res.getHeader(TYPE);
 
   if (typeof data !== "string" && "pipe" in data) {
-    res.setHeader(TYPE, type || OSTREAM);
+    res.setHeader(TYPE, type || TYPES.OSTREAM);
     return data.pipe(res);
   }
 
   if (data instanceof Buffer) {
-    type = type || OSTREAM; // prefer given
+    type = type || TYPES.OSTREAM; // prefer given
   }
 
   if (typeof data === "object") {
     data = JSON.stringify(data);
-    type = type || "application/json;charset=utf-8";
+    type = type || TYPES.JSON;
   } else {
     data = data || STATUS_CODES[code]!;
   }
 
-  obj[TYPE] = type || "text/plain";
+  obj[TYPE] = type || TYPES.TEXT;
   obj["content-length"] = Buffer.byteLength(data);
 
   res.writeHead(code, obj);
