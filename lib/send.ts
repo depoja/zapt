@@ -14,7 +14,7 @@ type Obj = {
   [errorCode: string]: string | number | string[];
 };
 
-export default (res: ServerResponse, data: Data = "", code = 200, headers: Obj = {}) => {
+export default (res: ServerResponse, data: Data = {}, code = 200, headers: Obj = {}) => {
   const obj: Obj = {};
 
   for (const k in headers) {

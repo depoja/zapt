@@ -1,22 +1,18 @@
-import Kefir from "kefir";
-import send from "../lib/send";
-import * as streams from "../lib/streams";
+import { createServer, plugins } from "../lib";
 
 import * as app from "./app";
 
-// const app = server().map(cors()).map(security());
-const server = streams.server(3000);
+const cors = plugins.cors();
+const router = plugins.router();
 
-const root = server.r("GET", "/").map((ctx) => [ctx, "Root"]);
-const hello = server.r(["GET", "POST"], "/hello/:name").map((ctx) => [ctx, app.hello(ctx.params)]);
+const server = createServer(3000).map(cors).map(router);
 
-// @ts-ignore
-const api = Kefir.merge([root, hello]);
+router.get("/", app.root);
+router.get("/hello/:name", app.hello);
+router.post("/hello/:name", app.hello);
 
-// @ts-ignore
-api.onValue(async ([ctx, val]) => {
-  const data = await Promise.resolve(val);
+// router.get("/").map(r(app.root));
+// router.get("/hello/:name").map(r(app.hello));
+// router.post("/hello/:name").map(r(app.hello));
 
-  // @ts-ignore
-  send(ctx.res, data);
-});
+// TODO: Create `r` - route and `p` - plugin decorators
