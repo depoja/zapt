@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icon.svg" alt="Zap" width="80" />
+  <img src="icon.svg" alt="Zapt" width="80" />
 </div>
 
 <h1 align="center">
@@ -31,7 +31,7 @@ Instead of entirely switching to a faster runtime or language when a project you
 Run the following command inside your npm project:
 
 ```sh
-$ npm i depoja/zap#master
+$ npm i depoja/zapt#master
 ```
 
 ## Usage
@@ -39,9 +39,9 @@ $ npm i depoja/zap#master
 ### Server
 
 ```ts
-import zap from "zap";
+import zapt from "zapt";
 
-const app = zap();
+const app = zapt();
 
 app.use(log).use(db);
 
@@ -94,15 +94,15 @@ Coming soon
 
 And here's the most loved, least meaningful metric of them all.
 
-Here's how a starter project in Zap performed on an **Intel i7-3667U, 8GB RAM** machine running Ubuntu 20.04 using [autocannon](https://github.com/mcollina/autocannon) and [node-clinic](https://github.com/clinicjs/node-clinic), compared to [fastify](https://github.com/fastify/fastify) and [express](https://github.com/expressjs/express).
+Here's how a starter project in Zapt performed on an **Intel i7-3667U, 8GB RAM** machine running Ubuntu 20.04 using [autocannon](https://github.com/mcollina/autocannon) and [node-clinic](https://github.com/clinicjs/node-clinic), compared to [fastify](https://github.com/fastify/fastify) and [express](https://github.com/expressjs/express).
 
 | Framework | Req/s  | RAM (max) | CPU (max) |
 | --------- | ------ | --------- | --------- |
-| zap       | 22'720 | 7 MB      | 223 %     |
+| zapt      | 22'720 | 7 MB      | 223 %     |
 | fastify   | 10'277 | 17 MB     | 291 %     |
 | express   | 4'671  | 56 MB     | 272 %     |
 
-### Zap
+### Zapt
 
 ```sh
 Running 10s test @ http://localhost:3000/user/1
