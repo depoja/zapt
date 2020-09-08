@@ -8,9 +8,6 @@
     "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "fastify": "^3.3.0",
-    "find-my-way": "^3.0.4",
-    "flyd": "^0.2.8",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v18.5.0"
   },
   "devDependencies": {
