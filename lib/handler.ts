@@ -15,9 +15,9 @@ export default (handler: Handler, plugins: Plugin[]) => async (
 
   try {
     const result = await Promise.resolve(handler(req, res)); // Add default error handler
-    !res.sent && res.send(result);
+    res.send(result);
   } catch (err) {
-    !res.sent && serverError(req, res, err);
+    serverError(req, res, err);
   }
 };
 
