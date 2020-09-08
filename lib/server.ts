@@ -8,6 +8,7 @@ import { wait } from "./utils";
 export default () => {
   const app = uws.App(); // TODO: Add options, example SSL (HTTPS) etc.
 
+  // TODO: Add plugin scopes
   const deps: Promise<Plugin | "timeout" | void>[] = [];
   const plugins: Plugin[] = [];
 
