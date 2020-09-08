@@ -1,18 +1,26 @@
-import { createServer, plugins } from "../lib";
+import rawy from "../lib";
+import { cors } from "../plugins/cors";
 
-import * as app from "./app";
+const app = rawy();
 
-const cors = plugins.cors();
-const router = plugins.router();
+app.use(cors);
 
-const server = createServer(3000).map(cors).map(router);
+app.get("/hello/:name", (req, res) => {
+  const name = req.param(0);
 
-router.get("/", app.root);
-router.get("/hello/:name", app.hello);
-router.post("/hello/:name", app.hello);
+  res.send({ name }, 200);
+});
 
-// router.get("/").map(r(app.root));
-// router.get("/hello/:name").map(r(app.hello));
-// router.post("/hello/:name").map(r(app.hello));
+app.post("/hello", async (req, res) => {
+  const x = await req.body();
+  console.log(x);
 
-// TODO: Create `r` - route and `p` - plugin decorators
+  return "ok";
+});
+
+app.get("/hello", (req, res) => {
+  throw new Error("whoops");
+  return { name: "Test" };
+});
+
+app.listen(3000);
