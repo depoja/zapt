@@ -10,6 +10,8 @@
 A web server so fast, you'll risk getting zapped. ⚡</p>
 <br>
 
+![dependencies](https://david-dm.org/username/repo.svg)
+
 **Zapt** is a minimal and highly performant Node.js framework.
 
 It swaps out the native [HTTP Server](https://nodejs.org/dist/latest/docs/api/http.html#http_class_http_server) for [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js) resulting in much faster (possibly an order of magnitude) and lower memory footprint servers.
