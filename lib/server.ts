@@ -1,7 +1,7 @@
 import uws from "uWebSockets.js";
 
 import { PLUGIN_TIMEOUT } from "./const";
-import getHandler from "./handler";
+import getHandler, { notFound } from "./handler";
 import { Instace, Plugin } from "./types";
 import { wait } from "./utils";
 
@@ -25,11 +25,13 @@ export default () => {
   let inst: Instace = {
     listen: async (port = 3000) => {
       await bootstrap();
+      inst.any("/*", notFound);
       app.listen(port, (sock) => sock && console.log("Listening to port 3000"));
     },
     use: (p, opts) => (
       deps.push(Promise.race([Promise.resolve(p(inst, opts || {})), wait(PLUGIN_TIMEOUT)])), inst
     ),
+    any: (p, h) => app.any(p, getHandler(h, plugins)),
     delete: (p, h) => app.del(p, getHandler(h, plugins)),
     get: (p, h) => app.get(p, getHandler(h, plugins)),
     options: (p, h) => app.options(p, getHandler(h, plugins)),

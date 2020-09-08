@@ -11,15 +11,15 @@ export default (_: HttpResponse) => {
   };
 
   const res: Response = {
-    headers: (values = {}) => _.cork(() => writeHeaders(values)),
+    _headers: {},
+    headers: (values = {}) => (res._headers = { ...res._headers, ...values }),
     send: (data, code = 200, headers = {}) =>
       !res.sent &&
       _.cork(() => {
         const [content, type] = getContent(data);
-        headers["Content-Type"] = type;
 
         _.writeStatus(codes[code]);
-        writeHeaders(headers);
+        writeHeaders({ ...res._headers, "Content-Type": type, ...headers });
         _.end(content);
         res.sent = true;
       }),
