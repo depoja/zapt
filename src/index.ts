@@ -1,18 +1,38 @@
-import rawy from "../lib";
+import rawy, { PluginFn } from "../lib";
 import { cors } from "../plugins/cors";
 
 const app = rawy();
 
-app.get("/test1", (req, res) => {
-  res.send("Test1");
-});
+const authenticate: PluginFn = () => {
+  const account = undefined; // Get from cookies or smth;
 
-app.use((app1) => {
-  app1.use(cors);
+  return (req, res) => {
+    req.state("account", account);
+  };
+};
 
-  app1.get("/test", (req, res) => {
-    res.send("Test");
+app.use(cors).use(authenticate);
+
+const protect: PluginFn = () => {
+  return (req, res) => {
+    if (!req.state("account")) {
+      throw new Error("You are not authenticated");
+    }
+  };
+};
+
+const protectedRoutes: PluginFn = (app) => {
+  app.use(protect);
+
+  app.get("/x", (req, res) => {
+    return { secret: "x" };
   });
+};
+
+app.use(protectedRoutes);
+
+app.get("/y", (req, res) => {
+  return "Hello World";
 });
 
 app.listen(3000);

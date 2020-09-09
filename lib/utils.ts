@@ -31,10 +31,9 @@ export const Scopes = () => {
     const plugins = [];
 
     for (let p of await Promise.all(collect(scope).flat())) {
-      typeof p === "function" && plugins.push(p);
+      typeof p === "function" && plugins.unshift(p);
     }
 
-    console.log("loaded", scope, plugins);
     pluginCache[scope] = plugins;
     return plugins;
   };

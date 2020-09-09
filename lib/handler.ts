@@ -4,16 +4,16 @@ import getReq from "./request";
 import getRes from "./response";
 import { ErrorHandler, Handler } from "./types";
 
-export default (handler: Handler, hook: Handler) => async (
+export default (handler: Handler, hooks: Handler) => async (
   _res: HttpResponse,
   _req: HttpRequest
 ) => {
   const req = getReq(_req, _res);
   const res = getRes(_res);
 
-  await hook(req, res);
-
   try {
+    await hooks(req, res);
+
     const result = await Promise.resolve(handler(req, res)); // Add default error handler
     res.send(result);
   } catch (err) {

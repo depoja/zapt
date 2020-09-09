@@ -3,34 +3,34 @@ import { HttpResponse } from "uWebSockets.js";
 import codes from "./codes";
 import { Response, Headers } from "./types";
 
-export default (_: HttpResponse) => {
+export default (_: HttpResponse): Response => {
   const writeHeaders = (headers: Headers = {}) => {
     for (let key in headers) {
       _.writeHeader(key, headers[key]);
     }
   };
 
-  const res: Response = {
-    _headers: {},
-    headers: (values = {}) => (res._headers = { ...res._headers, ...values }),
+  let headers = {};
+  let sent = false;
+
+  return {
+    headers: (values = {}) => (headers = { ...headers, ...values }),
     send: (data, code = 200, headers = {}) =>
-      !res.sent &&
+      !sent &&
       _.cork(() => {
         const [content, type] = getContent(data);
-
         _.writeStatus(codes[code]);
-        writeHeaders({ ...res._headers, "Content-Type": type, ...headers });
+        writeHeaders({ ...headers, "Content-Type": type, ...headers });
         _.end(content);
-        res.sent = true;
+        sent = true;
       }),
   };
-
-  return res;
 };
 
 const getContent = (data: any): [Buffer | string, string] =>
-  Buffer.isBuffer(data)
-    ? [data, "application/octet-stream"]
+  // Buffer.isBuffer(data) ? [data, "application/octet-stream"] :
+  typeof data === "string"
+    ? [data, "text/plain; charset=utf-8"]
     : [json(data), "application/json; charset=utf-8"];
 
 const json = (x: any) => {

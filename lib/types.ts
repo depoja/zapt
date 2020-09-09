@@ -9,6 +9,7 @@ export type Handler = (req: Request, res: Response) => any;
 export type ErrorHandler = (req: Request, res: Response, err: ServerError) => any;
 
 export type Headers = { [k: string]: string };
+export type State = { [k: string]: unknown };
 
 export type Request = {
   method: () => string;
@@ -17,11 +18,10 @@ export type Request = {
   headers: () => Headers;
   param: (index: number) => string;
   url: () => UrlWithParsedQuery;
+  state: (key: string, value?: unknown) => unknown | void;
 };
 
 export type Response = {
-  sent?: boolean;
-  _headers: Headers;
   headers: (values: Headers) => void;
   send: (data: any, code?: keyof Codes, headers?: Headers) => void;
 };
