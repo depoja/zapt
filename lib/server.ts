@@ -1,45 +1,44 @@
-import uws from "uWebSockets.js";
+import { App as createServer, TemplatedApp as Server } from "uWebSockets.js";
 
+import createRouter from "./router";
 import { PLUGIN_TIMEOUT } from "./const";
-import getHandler, { notFound } from "./handler";
-import { Instace, Plugin } from "./types";
-import { wait } from "./utils";
+import { notFound } from "./handler";
+import { Instance, App } from "./types";
+import { wait, Scopes } from "./utils";
+
+const createInstance = (server: Server, scopes = Scopes(), parent?: number) => {
+  const scope = scopes.create(parent);
+  const router = createRouter(server, async (...args) => {
+    const plugins = scopes.plugins[scope] || (await scopes.loadPlugins(scope));
+    for (const p of plugins) {
+      p(...args);
+    }
+  });
+
+  const inst: Instance = {
+    ...router,
+    use: (plugin, opts) => {
+      const pinst = createInstance(server, scopes, scope);
+      const definition = plugin(pinst, opts || {});
+      const timeout = wait(PLUGIN_TIMEOUT);
+
+      const dep = Promise.race([Promise.resolve(definition), timeout]);
+      scopes.register(scope, dep);
+
+      return inst;
+    },
+  };
+  return inst;
+};
 
 export default () => {
-  const app = uws.App(); // TODO: Add options, example SSL (HTTPS) etc.
+  const server = createServer(); // TODO: Add options, example SSL (HTTPS) etc.
+  const app = createInstance(server) as App;
 
-  // TODO: Add plugin scopes
-  const deps: Promise<Plugin | "timeout" | void>[] = [];
-  const plugins: Plugin[] = [];
-
-  const bootstrap = async () => {
-    for (let p of await Promise.all(deps)) {
-      if (p === "timeout") {
-        console.error("Plugin timed out");
-        process.exit(1);
-      } else if (typeof p === "function") {
-        plugins.push(p);
-      }
-    }
+  app.listen = (port = 3000) => {
+    app.any("/*", notFound);
+    server.listen(port, (sock) => sock && console.log("Listening to port 3000"));
   };
 
-  let inst: Instace = {
-    listen: async (port = 3000) => {
-      await bootstrap();
-      inst.any("/*", notFound);
-      app.listen(port, (sock) => sock && console.log("Listening to port 3000"));
-    },
-    use: (p, opts) => (
-      deps.push(Promise.race([Promise.resolve(p(inst, opts || {})), wait(PLUGIN_TIMEOUT)])), inst
-    ),
-    any: (p, h) => app.any(p, getHandler(h, plugins)),
-    delete: (p, h) => app.del(p, getHandler(h, plugins)),
-    get: (p, h) => app.get(p, getHandler(h, plugins)),
-    options: (p, h) => app.options(p, getHandler(h, plugins)),
-    patch: (p, h) => app.patch(p, getHandler(h, plugins)),
-    post: (p, h) => app.post(p, getHandler(h, plugins)),
-    put: (p, h) => app.put(p, getHandler(h, plugins)),
-  };
-
-  return inst;
+  return app;
 };

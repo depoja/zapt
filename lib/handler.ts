@@ -2,16 +2,16 @@ import { HttpRequest, HttpResponse } from "uWebSockets.js";
 
 import getReq from "./request";
 import getRes from "./response";
-import { ErrorHandler, Handler, Plugin } from "./types";
+import { ErrorHandler, Handler } from "./types";
 
-export default (handler: Handler, plugins: Plugin[]) => async (
+export default (handler: Handler, hook: Handler) => async (
   _res: HttpResponse,
   _req: HttpRequest
 ) => {
   const req = getReq(_req, _res);
   const res = getRes(_res);
 
-  plugins.forEach((p) => p(req, res));
+  await hook(req, res);
 
   try {
     const result = await Promise.resolve(handler(req, res)); // Add default error handler

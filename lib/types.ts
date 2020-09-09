@@ -27,16 +27,12 @@ export type Response = {
 };
 
 export type Plugin = (req: Request, res: Response) => void;
-
+export type PluginFn = (fn: Instance, opts: PluginOpts) => Promise<Plugin | void> | (Plugin | void);
 export type PluginOpts = { [key: string]: any };
-
-export type PluginFn = (fn: Instace, opts: PluginOpts) => Promise<Plugin | void> | (Plugin | void);
 
 export type Route = (path: string, handler: Handler) => any;
 
-export type Instace = {
-  listen: (port: number) => void;
-  use: (plugin: PluginFn, opts?: PluginOpts) => Instace;
+export type Router = {
   any: Route;
   delete: Route;
   get: Route;
@@ -45,3 +41,13 @@ export type Instace = {
   post: Route;
   put: Route;
 };
+
+export type Instance = Router & {
+  use: (plugin: PluginFn, opts?: PluginOpts) => Instance;
+};
+
+export type App = Instance & {
+  listen: (port: number) => void;
+};
+
+export type PluginResult = Promise<Plugin | "timeout" | void>;
