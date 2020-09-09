@@ -102,11 +102,11 @@ And here's the most loved, least meaningful metric of them all.
 
 Here's how a starter project in Zapt performed on an **Intel i7-3667U, 8GB RAM** machine running Ubuntu 20.04 using [autocannon](https://github.com/mcollina/autocannon) and [node-clinic](https://github.com/clinicjs/node-clinic), compared to [fastify](https://github.com/fastify/fastify) and [express](https://github.com/expressjs/express).
 
-| Framework | Req/s  | RAM (max) | CPU (max) |
-| --------- | ------ | --------- | --------- |
-| zapt      | 48'864 | 7 MB      | 219 %     |
-| fastify   | 26'691 | 18 MB     | 292 %     |
-| express   | 7'523  | 59 MB     | 281 %     |
+| Framework | Req/s      | RAM (max) | CPU (max) |
+| --------- | ---------- | --------- | --------- |
+| **zapt**  | **48'864** | **7MB**   | **219%**  |
+| fastify   | 26'691     | 18MB      | 292%      |
+| express   | 7'523      | 59MB      | 281%      |
 
 ### Zapt
 
