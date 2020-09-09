@@ -11,9 +11,10 @@ A web server so fast, you'll risk getting zapped. ⚡</p>
 <br>
 
 ![version](https://img.shields.io/github/package-json/v/depoja/zapt)
-![maintainability](https://api.codeclimate.com/v1/badges/7d3d84a35fcee218fae8/maintainability)
+![language](https://img.shields.io/github/languages/top/depoja/zapt)
 ![dependencies](https://img.shields.io/david/depoja/zapt)
-![vulnerabilities](https://snyk.io/test/github/depoja/zapt/badge.svg)
+![vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/depoja/zapt)
+![maintainability](https://img.shields.io/codeclimate/maintainability/depoja/zapt)
 
 **Zapt** is a minimal and highly performant Node.js framework.
 
