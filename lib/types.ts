@@ -50,4 +50,4 @@ export type App = Instance & {
   listen: (port: number) => void;
 };
 
-export type PluginResult = Promise<Plugin | "timeout" | void>;
+export type PluginResult = Promise<Plugin | void>;

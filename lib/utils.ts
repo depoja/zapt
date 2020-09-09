@@ -1,7 +1,5 @@
 import { PluginResult, Plugin } from "./types";
-
-export const wait = (ms: number): Promise<"timeout"> =>
-  new Promise((res) => setTimeout(() => res("timeout"), ms));
+import { PLUGIN_TIMEOUT } from "./const";
 
 export const Scopes = () => {
   type Node = { value: PluginResult[]; parent?: number };
@@ -33,17 +31,24 @@ export const Scopes = () => {
     const plugins = [];
 
     for (let p of await Promise.all(collect(scope).flat())) {
-      if (p === "timeout") {
-        console.error("Plugin timed out");
-        process.exit(1);
-      } else if (typeof p === "function") {
-        plugins.push(p);
-      }
+      typeof p === "function" && plugins.push(p);
     }
 
+    console.log("loaded", scope, plugins);
     pluginCache[scope] = plugins;
     return plugins;
   };
 
   return { create, register, plugins: pluginCache, loadPlugins };
 };
+
+export const wait = (ms: number): Promise<"timeout"> =>
+  new Promise((res) => setTimeout(() => res("timeout"), ms));
+
+export const exitOnTimeout = (p: Promise<any>) =>
+  Promise.race([wait(PLUGIN_TIMEOUT), p]).then((v) => {
+    if (v === "timeout") {
+      console.error("Plugin timed out");
+      process.exit(1);
+    }
+  });

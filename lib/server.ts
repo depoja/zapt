@@ -1,10 +1,9 @@
 import { App as createServer, TemplatedApp as Server } from "uWebSockets.js";
 
 import createRouter from "./router";
-import { PLUGIN_TIMEOUT } from "./const";
 import { notFound } from "./handler";
 import { Instance, App } from "./types";
-import { wait, Scopes } from "./utils";
+import { exitOnTimeout, Scopes } from "./utils";
 
 const createInstance = (server: Server, scopes = Scopes(), parent?: number) => {
   const scope = scopes.create(parent);
@@ -20,10 +19,10 @@ const createInstance = (server: Server, scopes = Scopes(), parent?: number) => {
     use: (plugin, opts) => {
       const pinst = createInstance(server, scopes, scope);
       const definition = plugin(pinst, opts || {});
-      const timeout = wait(PLUGIN_TIMEOUT);
+      const result = Promise.resolve(definition);
 
-      const dep = Promise.race([Promise.resolve(definition), timeout]);
-      scopes.register(scope, dep);
+      scopes.register(scope, result);
+      exitOnTimeout(result);
 
       return inst;
     },
