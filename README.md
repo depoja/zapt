@@ -11,7 +11,7 @@ A web server so fast, you'll risk getting zapped. ⚡</p>
 <br>
 
 ![version](https://img.shields.io/github/package-json/v/depoja/zapt)
-![language](https://img.shields.io/github/languages/top/depoja/zapt)
+![downloads](https://img.shields.io/github/downloads/depoja/zapt/total)
 ![dependencies](https://img.shields.io/david/depoja/zapt)
 ![vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/depoja/zapt)
 ![maintainability](https://img.shields.io/codeclimate/maintainability/depoja/zapt)
