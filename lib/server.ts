@@ -34,9 +34,9 @@ export default () => {
   const server = createServer(); // TODO: Add options, example SSL (HTTPS) etc.
   const app = createInstance(server) as App;
 
-  app.listen = (port = 3000) => {
+  app.listen = (port = 3000, cb) => {
     app.any("/*", notFound);
-    server.listen(port, (sock) => sock && console.log("Listening to port 3000"));
+    server.listen(port, (sock) => typeof cb == "function" && cb(!sock));
   };
 
   return app;

@@ -26,4 +26,4 @@ app.get("/error", (req, res) => {
   throw Error("Something went wrong");
 });
 
-app.listen(3000);
+app.listen(3000, (err) => !err && console.log(`Listening on port: 3000`));

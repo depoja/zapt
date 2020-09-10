@@ -47,7 +47,7 @@ export type Instance = Router & {
 };
 
 export type App = Instance & {
-  listen: (port: number) => void;
+  listen: (port: number, cb?: (err?: boolean) => void) => void;
 };
 
 export type PluginResult = Promise<Plugin | void>;

@@ -5,7 +5,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
-    "start": "ts-node src/index.ts",
+    "start": "ts-node examples/basics.ts",
     "benchmark": "autocannon -d 10 -c 100 http://localhost:3000/user/1 && autocannon -d 10 -c 100 http://localhost:3001/user/1 && autocannon -d 10 -c 100 http://localhost:3002/user/1"
   },
   "dependencies": {
