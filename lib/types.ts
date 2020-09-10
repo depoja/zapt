@@ -22,8 +22,10 @@ export type Request = {
 };
 
 export type Response = {
-  headers: (values: Headers) => void;
-  send: (data: any, code?: keyof Codes, headers?: Headers) => void;
+  header: (key: string, value: string) => Response;
+  headers: (values?: Headers) => Response;
+  status: (value?: keyof Codes) => Response;
+  send: (data: any, status?: keyof Codes, headers?: Headers) => void;
 };
 
 export type Plugin = (req: Request, res: Response) => void;

@@ -1,9 +1,9 @@
 import { HttpResponse } from "uWebSockets.js";
 
 import codes from "./codes";
-import { Response, Headers } from "./types";
+import { Response, Headers, Codes } from "./types";
 
-export default (_: HttpResponse): Response => {
+export default (_: HttpResponse) => {
   const writeHeaders = (headers: Headers = {}) => {
     for (let key in headers) {
       _.writeHeader(key, headers[key]);
@@ -11,20 +11,30 @@ export default (_: HttpResponse): Response => {
   };
 
   let headers = {};
+  let status: any;
   let sent = false;
 
-  return {
-    headers: (values = {}) => (headers = { ...headers, ...values }),
-    send: (data, code = 200, headers = {}) =>
-      !sent &&
-      _.cork(() => {
+  const res: Response = {
+    header: (key: string, value: string) => ((headers = { ...headers, [key]: value }), res),
+    headers: (values = {}) => ((headers = { ...headers, ...values }), res),
+    status: (value = 200) => ((status = codes[value]), res),
+    send: (data, s, h) => {
+      if (!sent) {
+        s && res.status(s);
+        h && res.headers(h);
         const [content, type] = getContent(data);
-        _.writeStatus(codes[code]);
-        writeHeaders({ ...headers, "Content-Type": type, ...headers });
-        _.end(content);
-        sent = true;
-      }),
+
+        _.cork(() => {
+          _.writeStatus(status);
+          writeHeaders({ "Content-Type": type, ...headers });
+          _.end(content);
+          sent = true;
+        });
+      }
+    },
   };
+
+  return res;
 };
 
 const getContent = (data: any): [Buffer | string, string] =>
