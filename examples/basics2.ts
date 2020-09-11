@@ -1,9 +1,6 @@
 import rawy from "../lib";
-import { cors } from "../plugins/cors";
-import { secure } from "../plugins/secure";
 
 const app = rawy();
-app.use(cors, { allowedOrigins: ["*"] }).use(secure);
 
 app.get("/text", (req, res) => {
   return "Hello"; // Send text

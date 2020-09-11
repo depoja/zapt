@@ -1,12 +1,13 @@
 import { HttpResponse } from "uWebSockets.js";
 
 import codes from "./codes";
-import { Response, Headers, Codes } from "./types";
+import { Response, Headers } from "./types";
 
 export default (_: HttpResponse) => {
   const writeHeaders = (headers: Headers = {}) => {
     for (let key in headers) {
-      _.writeHeader(key, headers[key]);
+      const value = headers[key];
+      value && _.writeHeader(key, value);
     }
   };
 

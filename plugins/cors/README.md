@@ -1,6 +1,6 @@
 # Zapt Plugins / CORS
 
-Simple [CORS](developer.mozilla.org/en-US/docs/Web/HTTP/CORS) plugin for [Zapt](github.com/depoja/zapt).
+Simple [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) plugin for [Zapt](https://github.com/depoja/zapt).
 
 ## Install
 

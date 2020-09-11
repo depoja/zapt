@@ -1,27 +1,34 @@
 import { PluginFn, Headers } from "../../lib";
 
-export const cors: PluginFn = (_, opts = {}) => {
-  return (req, res) => {
-    const headers: Headers = {};
+export const secure: PluginFn = (_, opts = {}) => {
+  return (_, res) => {
+    const h: Headers = {};
 
     const {
-      contentTypeOptions = "nosniff",
-      dnsPrefetchControl = "off", // "on", "off"
-      frameOptions = "SAMEORIGIN", // "SAMEORIGIN", "DENY"
-      referrerPolicy = "no-referrer", // "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin", "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url"
+      html = false,
+      cacheControl,
+      contentTypeOptions,
+      contentSecurityPolicy,
+      featurePolicy,
+      frameOptions,
+      referrerPolicy,
+      strictTransportSecurity,
     } = opts;
 
-    headers["Referrer-Policy"] = referrerPolicy;
+    // API Headers
+    h["Cache-Control"] = cacheControl ?? "no-store";
+    h["Content-Security-Policy"] = contentSecurityPolicy ?? "frame-ancestors 'none'";
+    h["Strict-Transport-Security"] = strictTransportSecurity ?? "max-age=300; includeSubDomains";
+    h["X-Content-Type-Options"] = contentTypeOptions ?? "nosniff";
+    h["X-Frame-Options"] = frameOptions ?? "DENY";
 
-    headers["X-Content-Type-Options"] = contentTypeOptions;
-    headers["X-DNS-Prefetch-Control"] = dnsPrefetchControl;
-    headers["X-Frame-Options"] = frameOptions;
+    // HTML Specific Headers
+    if (html) {
+      h["Content-Security-Policy"] = contentSecurityPolicy ?? "default-src 'none'";
+      h["Feature-Policy"] = featurePolicy ?? "'none'";
+      h["Referrer-Policy"] = referrerPolicy ?? "no-referrer";
+    }
 
-    // Legacy
-    // X-Download-Options
-    // X-Permitted-Cross-Domain-Policies
-    // X-XSS-Protection
-
-    res.headers(headers);
+    res.headers(h);
   };
 };
