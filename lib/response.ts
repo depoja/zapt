@@ -12,7 +12,7 @@ export default (_: HttpResponse) => {
   };
 
   let headers = {};
-  let status: any;
+  let status = codes[200];
   let sent = false;
 
   const res: Response = {
