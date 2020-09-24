@@ -1,7 +1,7 @@
 import { HttpResponse } from "uWebSockets.js";
 
 import codes from "./codes";
-import { Response, Headers } from "./types";
+import { Response, Headers, Codes } from "./types";
 
 export default (_: HttpResponse) => {
   const writeHeaders = (headers: Headers = {}) => {
@@ -12,13 +12,13 @@ export default (_: HttpResponse) => {
   };
 
   let headers = {};
-  let status = codes[200];
+  let status: keyof Codes = 200;
   let sent = false;
 
   const res: Response = {
     header: (key: string, value: string) => ((headers = { ...headers, [key]: value }), res),
     headers: (values = {}) => ((headers = { ...headers, ...values }), res),
-    status: (value = 200) => ((status = codes[value]), res),
+    status: (value = 200) => ((status = value), res),
     send: (data, s, h) => {
       if (!sent) {
         s && res.status(s);
@@ -26,7 +26,7 @@ export default (_: HttpResponse) => {
         const [content, type] = getContent(data);
 
         _.cork(() => {
-          _.writeStatus(status);
+          _.writeStatus(`${status} ${codes[status]}`);
           writeHeaders({ "Content-Type": type, ...headers });
           _.end(content);
           sent = true;

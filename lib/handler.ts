@@ -1,5 +1,6 @@
 import { HttpRequest, HttpResponse } from "uWebSockets.js";
 
+import error from "./error";
 import getReq from "./request";
 import getRes from "./response";
 import { ErrorHandler, Handler } from "./types";
@@ -13,10 +14,12 @@ export default (path: string, handler: Handler, hooks: Handler) => {
     const req = getReq(_req, _res, pathParams);
     const res = getRes(_res);
 
+    // In case response times-out (required by uws for async)
+    _res.onAborted(() => serverError(req, res, error(undefined, 408)));
+
     try {
       await hooks(req, res);
-
-      const result = await Promise.resolve(handler(req, res)); // Add default error handler
+      const result = await handler(req, res); // Add default error handler
       res.send(result);
     } catch (err) {
       serverError(req, res, err);
@@ -24,10 +27,7 @@ export default (path: string, handler: Handler, hooks: Handler) => {
   };
 };
 
-export const notFound: Handler = (_, res) => {
-  res.send({ message: "Not Foundaaa" }, 404);
-};
+export const notFound: Handler = (req, res) => serverError(req, res, error(undefined, 404));
 
-export const serverError: ErrorHandler = (_, res, err) => {
+export const serverError: ErrorHandler = (_, res, err) =>
   res.send({ message: err.message || "Something went wrong" }, err.code || 500);
-};
