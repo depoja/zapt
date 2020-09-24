@@ -54,7 +54,7 @@ export declare type Instance = Router & {
     use: (plugin: PluginFn, opts?: PluginOpts) => Instance;
 };
 export declare type App = Instance & {
-    listen: (port: number, cb?: (err?: boolean) => void) => void;
+    listen: (port?: number, host?: string, cb?: (err?: boolean) => void) => void;
 };
 export declare type PluginResult = Promise<Plugin | void>;
 export {};

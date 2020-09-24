@@ -1,4 +1,8 @@
-import { App as createServer, TemplatedApp as Server } from "uWebSockets.js";
+import {
+  App as createServer,
+  TemplatedApp as Server,
+  us_listen_socket_close as closeSock,
+} from "uWebSockets.js";
 
 import createRouter from "./router";
 import { notFound } from "./handler";
@@ -34,9 +38,16 @@ export default () => {
   const server = createServer(); // TODO: Add options, example SSL (HTTPS) etc.
   const app = createInstance(server) as App;
 
-  app.listen = (port = 3000, cb) => {
+  app.listen = (port = 3000, host = "0.0.0.0", cb) => {
     app.any("/*", notFound);
-    server.listen(port, (sock) => typeof cb == "function" && cb(!sock));
+
+    server.listen(host, port, (sock) => {
+      typeof cb == "function" && cb(!sock);
+      const close = () => closeSock(sock);
+
+      process.on("SIGINT", close);
+      process.on("SIGTERM", close);
+    });
   };
 
   return app;
