@@ -31,9 +31,9 @@ const createInstance = (server, scopes = utils_1.Scopes(), parent) => {
 exports.default = () => {
     const server = uWebSockets_js_1.App(); // TODO: Add options, example SSL (HTTPS) etc.
     const app = createInstance(server);
-    app.listen = (port = 3000) => {
+    app.listen = (port = 3000, cb) => {
         app.any("/*", handler_1.notFound);
-        server.listen(port, (sock) => sock && console.log("Listening to port 3000"));
+        server.listen(port, (sock) => typeof cb == "function" && cb(!sock));
     };
     return app;
 };
