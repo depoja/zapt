@@ -4,21 +4,24 @@ import getReq from "./request";
 import getRes from "./response";
 import { ErrorHandler, Handler } from "./types";
 
-export default (handler: Handler, hooks: Handler) => async (
-  _res: HttpResponse,
-  _req: HttpRequest
-) => {
-  const req = getReq(_req, _res);
-  const res = getRes(_res);
+export default (path: string, handler: Handler, hooks: Handler) => {
+  const pathParams = path
+    .split("/")
+    .reduce((_, p) => (p[0] === ":" ? { ..._, [p.slice(1)]: Object.keys(_).length } : _), {});
 
-  try {
-    await hooks(req, res);
+  return async (_res: HttpResponse, _req: HttpRequest) => {
+    const req = getReq(_req, _res, pathParams);
+    const res = getRes(_res);
 
-    const result = await Promise.resolve(handler(req, res)); // Add default error handler
-    res.send(result);
-  } catch (err) {
-    serverError(req, res, err);
-  }
+    try {
+      await hooks(req, res);
+
+      const result = await Promise.resolve(handler(req, res)); // Add default error handler
+      res.send(result);
+    } catch (err) {
+      serverError(req, res, err);
+    }
+  };
 };
 
 export const notFound: Handler = (_, res) => {

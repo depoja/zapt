@@ -1,4 +1,4 @@
-import { PluginFn, Headers } from "../lib";
+import { PluginFn, Headers } from "../../lib";
 
 export const cors: PluginFn = (_, opts = {}) => {
   const {
