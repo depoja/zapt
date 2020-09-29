@@ -38,8 +38,15 @@ export default () => {
   const server = createServer(); // TODO: Add options, example SSL (HTTPS) etc.
   const app = createInstance(server) as App;
 
-  app.listen = (port = 3000, host = "0.0.0.0", cb) => {
+  app.listen = (path = 3000, cb) => {
     app.any("/*", notFound);
+
+    const split = path.toString().split(":");
+
+    const host = split.length > 1 ? split[0] : "0.0.0.0";
+    const port = Number(split.length > 1 ? split[1] : split[0]);
+
+    console.log(`Starting server on ${host}:${port}`);
 
     server.listen(host, port, (sock) => {
       typeof cb == "function" && cb(!sock);
