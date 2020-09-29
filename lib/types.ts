@@ -16,7 +16,8 @@ export type State = { [k: string]: unknown };
 
 export type Request = {
   method: () => string;
-  body: () => Promise<unknown>;
+  body: () => Promise<Buffer>;
+  json: () => Promise<any>;
   header: (key: string) => string;
   headers: () => Headers;
   param: (key: string) => string | undefined;
@@ -34,7 +35,8 @@ export type Response = {
   header: (key: string, value: string) => Response;
   headers: (values?: Headers) => Response;
   status: (value?: keyof Codes) => Response;
-  send: (data: any, status?: keyof Codes, headers?: Headers) => void;
+  stream: (data: any, length?: number, status?: keyof Codes, headers?: Headers) => void;
+  send: (data: any, status?: keyof Codes, headers?: Headers, length?: number) => void;
 };
 
 export type Plugin = (req: Request, res: Response) => void;
@@ -58,7 +60,7 @@ export type Instance = Router & {
 };
 
 export type App = Instance & {
-  listen: (port?: number, host?: string, cb?: (err?: boolean) => void) => void;
+  listen: (port?: number | string, cb?: (err?: boolean) => void) => void;
 };
 
 export type PluginResult = Promise<Plugin | void>;

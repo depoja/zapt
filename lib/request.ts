@@ -2,7 +2,7 @@ import { HttpRequest, HttpResponse } from "uWebSockets.js";
 import { parse } from "url";
 import qs from "querystring";
 
-import { json } from "./parsers";
+import bodyParser from "./parsers";
 import { Request, Headers, State, RequestParams } from "./types";
 
 export default (_req: HttpRequest, _res: HttpResponse, pathParams: RequestParams): Request => {
@@ -14,7 +14,8 @@ export default (_req: HttpRequest, _res: HttpResponse, pathParams: RequestParams
   };
 
   return {
-    body: () => json(_res),
+    json: () => bodyParser(_res, true),
+    body: () => bodyParser(_res),
     method: () => _req.getMethod(),
     header: (key: string) => _req.getHeader(key),
     headers: () => {
