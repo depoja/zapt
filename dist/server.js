@@ -31,8 +31,12 @@ const createInstance = (server, scopes = utils_1.Scopes(), parent) => {
 exports.default = () => {
     const server = uWebSockets_js_1.App(); // TODO: Add options, example SSL (HTTPS) etc.
     const app = createInstance(server);
-    app.listen = (port = 3000, host = "0.0.0.0", cb) => {
+    app.listen = (path = 3000, cb) => {
         app.any("/*", handler_1.notFound);
+        const split = path.toString().split(":");
+        const host = split.length > 1 ? split[0] : "0.0.0.0";
+        const port = Number(split.length > 1 ? split[1] : split[0]);
+        console.log(`Starting server on ${host}:${port}`);
         server.listen(host, port, (sock) => {
             typeof cb == "function" && cb(!sock);
             const close = () => uWebSockets_js_1.us_listen_socket_close(sock);

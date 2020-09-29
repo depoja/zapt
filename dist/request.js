@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const querystring_1 = __importDefault(require("querystring"));
-const parsers_1 = require("./parsers");
+const parsers_1 = __importDefault(require("./parsers"));
 exports.default = (_req, _res, pathParams) => {
     let state = {};
     const param = (key) => {
@@ -13,7 +13,8 @@ exports.default = (_req, _res, pathParams) => {
         return typeof i === "number" ? _req.getParameter(i) : undefined;
     };
     return {
-        body: () => parsers_1.json(_res),
+        json: () => parsers_1.default(_res, true),
+        body: () => parsers_1.default(_res),
         method: () => _req.getMethod(),
         header: (key) => _req.getHeader(key),
         headers: () => {

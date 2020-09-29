@@ -27,4 +27,4 @@ exports.default = (path, handler, hooks) => {
     };
 };
 exports.notFound = (req, res) => exports.serverError(req, res, error_1.default(undefined, 404));
-exports.serverError = (_, res, err) => res.send({ message: err.message || "Something went wrong" }, err.code || 500);
+exports.serverError = (_, res, err) => res.send({ message: (err && err.message) || "Something went wrong" }, (err && err.code) || 500);

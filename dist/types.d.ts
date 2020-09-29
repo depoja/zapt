@@ -17,7 +17,8 @@ export declare type State = {
 };
 export declare type Request = {
     method: () => string;
-    body: () => Promise<unknown>;
+    body: () => Promise<Buffer>;
+    json: () => Promise<any>;
     header: (key: string) => string;
     headers: () => Headers;
     param: (key: string) => string | undefined;
@@ -54,7 +55,7 @@ export declare type Instance = Router & {
     use: (plugin: PluginFn, opts?: PluginOpts) => Instance;
 };
 export declare type App = Instance & {
-    listen: (port?: number, host?: string, cb?: (err?: boolean) => void) => void;
+    listen: (port?: number | string, cb?: (err?: boolean) => void) => void;
 };
 export declare type PluginResult = Promise<Plugin | void>;
 export {};

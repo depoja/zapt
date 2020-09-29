@@ -1,2 +1,4 @@
+/// <reference types="node" />
 import { HttpResponse } from "uWebSockets.js";
-export declare const json: (res: HttpResponse) => Promise<unknown>;
+declare const _default: (res: HttpResponse, json?: boolean) => Promise<Buffer | any>;
+export default _default;

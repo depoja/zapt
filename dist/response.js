@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const codes_1 = __importDefault(require("./codes"));
+const send_1 = require("./send");
 exports.default = (_) => {
     const writeHeaders = (headers = {}) => {
         for (let key in headers) {
@@ -13,37 +14,28 @@ exports.default = (_) => {
     };
     let headers = {};
     let status = 200;
-    let sent = false;
     const res = {
         header: (key, value) => ((headers = { ...headers, [key]: value }), res),
         headers: (values = {}) => ((headers = { ...headers, ...values }), res),
         status: (value = 200) => ((status = value), res),
         send: (data, s, h) => {
-            if (!sent) {
+            if (!_.sent) {
                 s && res.status(s);
                 h && res.headers(h);
-                const [content, type] = getContent(data);
+                const [content, type] = send_1.getContent(data);
                 _.cork(() => {
                     _.writeStatus(`${status} ${codes_1.default[status]}`);
                     writeHeaders({ "Content-Type": type, ...headers });
-                    _.end(content);
-                    sent = true;
+                    if (typeof content === "function") {
+                        content(_, data);
+                    }
+                    else {
+                        _.end(content);
+                        _.sent = true;
+                    }
                 });
             }
         },
     };
     return res;
-};
-const getContent = (data) => 
-// Buffer.isBuffer(data) ? [data, "application/octet-stream"] :
-typeof data === "string"
-    ? [data, "text/plain; charset=utf-8"]
-    : [json(data), "application/json; charset=utf-8"];
-const json = (x) => {
-    try {
-        return JSON.stringify(x);
-    }
-    catch (err) {
-        return "";
-    }
 };
