@@ -35,8 +35,7 @@ export type Response = {
   header: (key: string, value: string) => Response;
   headers: (values?: Headers) => Response;
   status: (value?: keyof Codes) => Response;
-  stream: (data: any, length?: number, status?: keyof Codes, headers?: Headers) => void;
-  send: (data: any, status?: keyof Codes, headers?: Headers, length?: number) => void;
+  send: (data: any, status?: keyof Codes, headers?: Headers) => void;
 };
 
 export type Plugin = (req: Request, res: Response) => void;

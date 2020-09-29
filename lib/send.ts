@@ -19,37 +19,20 @@ export const getContent = (obj: any) => {
   return [data, "text/plain; charset=utf-8"];
 };
 
-export const pipe = (res: HttpResponse, s: Readable, size = 0) => {
-  let finished = false;
-  let lastChunk: Buffer;
-  let lastOffset: number;
+export const pipe = (res: HttpResponse, s: Readable) => {
+  let done = false;
 
   const end = () => {
-    !finished && s.destroy();
-    finished = true;
+    if (!done) {
+      res.end();
+      s.destroy();
+    }
+    done = true;
   };
 
-  s.on("data", (chunk) => {
-    lastChunk = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength); // Take only standard V8 units of data */
-    lastOffset = res.getWriteOffset();
-
-    const [ok, done] = res.tryEnd(chunk, size);
-    if (done) {
-      return end();
-    } else if (!ok) {
-      s.pause();
-    }
-
-    res.onWritable((offset) => {
-      const [ok, done] = res.tryEnd(lastChunk.slice(offset - lastOffset), size);
-      if (done) {
-        end();
-      } else if (ok) {
-        s.resume();
-      }
-      return ok;
-    });
-  }).on("error", end);
+  s.on("data", (d) => !done && res.write(d.buffer.slice(d.byteOffset, d.byteOffset + d.byteLength)))
+    .on("end", end)
+    .on("error", end);
 
   res.onAborted(end);
 };

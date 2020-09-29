@@ -19,7 +19,7 @@ app.post("/", async (req, res) => {
 app.get("/", async (req, res) => {
   const file = "/home/someone/Downloads/sintel-1024-stereo.mp4";
 
-  res.stream(fs.createReadStream(file), fs.statSync(file).size);
+  return fs.createReadStream(file);
 });
 
 app.listen("0.0.0.0:4000", (err) => !err && console.log("Started"));
