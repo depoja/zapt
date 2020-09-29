@@ -30,4 +30,4 @@ export default (path: string, handler: Handler, hooks: Handler) => {
 export const notFound: Handler = (req, res) => serverError(req, res, error(undefined, 404));
 
 export const serverError: ErrorHandler = (_, res, err) =>
-  res.send({ message: err.message || "Something went wrong" }, err.code || 500);
+  res.send({ message: (err && err.message) || "Something went wrong" }, (err && err.code) || 500);
