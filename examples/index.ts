@@ -1,14 +1,25 @@
-import rawy from "../lib";
+import fs from "fs";
+import zapt from "../lib";
 import { cors } from "../plugins/cors";
 import { secure } from "../plugins/secure";
 
-const app = rawy();
+const app = zapt();
 app.use(cors, { allowedOrigins: ["*"] }).use(secure);
 
-app.get("/user/:id", (req, res) => {
-  // console.log(req.params(), req.query());
-
-  return "Hello"; // Send text
+app.get("/hello", (req, res) => {
+  return "Hello";
 });
 
-app.listen(3000, (err) => !err && console.log(`Listening on port: 3000`));
+app.post("/", async (req, res) => {
+  const body = await req.body();
+
+  return body.toString(); // Send text
+});
+
+app.get("/", async (req, res) => {
+  const file = "/home/someone/Downloads/sintel-1024-stereo.mp4";
+
+  res.stream(fs.createReadStream(file), fs.statSync(file).size);
+});
+
+app.listen("0.0.0.0:4000", (err) => !err && console.log("Started"));
