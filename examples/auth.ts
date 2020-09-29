@@ -1,4 +1,4 @@
-import rawy, { PluginFn } from "../lib";
+import zapt, { PluginFn } from "../lib";
 
 const authenticate: PluginFn = () => {
   const account = undefined; // Get from cookies or smth;
@@ -16,7 +16,7 @@ const protect: PluginFn = () => {
   };
 };
 
-const app = rawy();
+const app = zapt();
 
 const protectedRoutes: PluginFn = (app) => {
   app.use(protect);

@@ -1,6 +1,6 @@
-import rawy from "../lib";
+import zapt from "../lib";
 
-const app = rawy();
+const app = zapt();
 
 app.get("/text", (req, res) => {
   return "Hello"; // Send text

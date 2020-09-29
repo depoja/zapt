@@ -1,6 +1,6 @@
-import rawy, { PluginFn } from "../lib";
+import zapt, { PluginFn } from "../lib";
 
-const app = rawy();
+const app = zapt();
 
 // Plugin declaration
 const log: PluginFn = () => {
