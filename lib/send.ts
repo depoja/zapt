@@ -21,14 +21,16 @@ export const getContent = (obj: any) => {
 
 export const pipe = (r: HttpResponse, s: Readable) => {
   const end = () => {
+    s.destroy();
     if (!r.sent) {
       r.end();
-      s.destroy();
+      r.sent = true;
     }
-    r.sent = true;
   };
 
-  s.on("data", (d) => !r.sent && r.write(d.buffer.slice(d.byteOffset, d.byteOffset + d.byteLength)))
+  s.on("data", (d) =>
+    r.sent ? end() : r.write(d.buffer.slice(d.byteOffset, d.byteOffset + d.byteLength))
+  )
     .on("end", end)
     .on("error", end);
 
