@@ -19,20 +19,18 @@ export const getContent = (obj: any) => {
   return [data, "text/plain; charset=utf-8"];
 };
 
-export const pipe = (res: HttpResponse, s: Readable) => {
-  let done = false;
-
+export const pipe = (r: HttpResponse, s: Readable) => {
   const end = () => {
-    if (!done) {
-      res.end();
+    if (!r.sent) {
+      r.end();
       s.destroy();
     }
-    done = true;
+    r.sent = true;
   };
 
-  s.on("data", (d) => !done && res.write(d.buffer.slice(d.byteOffset, d.byteOffset + d.byteLength)))
+  s.on("data", (d) => !r.sent && r.write(d.buffer.slice(d.byteOffset, d.byteOffset + d.byteLength)))
     .on("end", end)
     .on("error", end);
 
-  res.onAborted(end);
+  r.onAborted(end);
 };

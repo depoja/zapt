@@ -14,14 +14,13 @@ export default (_: HttpResponse) => {
 
   let headers = {};
   let status: keyof Codes = 200;
-  let sent = false;
 
   const res: Response = {
     header: (key: string, value: string) => ((headers = { ...headers, [key]: value }), res),
     headers: (values = {}) => ((headers = { ...headers, ...values }), res),
     status: (value = 200) => ((status = value), res),
     send: (data, s, h) => {
-      if (!sent) {
+      if (!_.sent) {
         s && res.status(s);
         h && res.headers(h);
         const [content, type] = getContent(data);
@@ -30,9 +29,12 @@ export default (_: HttpResponse) => {
           _.writeStatus(`${status} ${codes[status]}`);
           writeHeaders({ "Content-Type": type, ...headers });
 
-          typeof content === "function" ? content(_, data) : _.end(content);
-
-          sent = true;
+          if (typeof content === "function") {
+            content(_, data);
+          } else {
+            _.end(content);
+            _.sent = true;
+          }
         });
       }
     },
