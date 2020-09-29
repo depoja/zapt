@@ -1,18 +1,19 @@
 import { HttpResponse } from "uWebSockets.js";
 import { MAX_BODY_SIZE } from "./const"; // TODO: Move to an option?
 
-// TODO: Move to plugin & handle body of type text fails
-export const json = (res: HttpResponse) =>
+export default (res: HttpResponse, json = false): Promise<Buffer | any> =>
   new Promise((resolve, reject) => {
-    let data = Buffer.from([]);
+    let buffer: Buffer;
 
     res.onData((chunk, isLast) => {
-      data = Buffer.concat([data, Buffer.from(chunk)]);
-      data.byteLength > MAX_BODY_SIZE && reject();
+      const data = Buffer.from(chunk);
+      buffer = buffer ? Buffer.concat([buffer, data]) : data;
+
+      buffer.byteLength > MAX_BODY_SIZE && reject();
 
       if (isLast) {
         try {
-          resolve(data.byteLength ? JSON.parse(data as any) : {});
+          resolve(json ? JSON.parse(buffer as any) : buffer);
         } catch (e) {
           reject();
         }
