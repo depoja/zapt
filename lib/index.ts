@@ -1,4 +1,6 @@
 import server from "./server";
-export * from "./types";
+import error from "./error";
 
+export { error };
+export * from "./types";
 export default server;
