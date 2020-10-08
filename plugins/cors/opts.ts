@@ -17,10 +17,10 @@ export const defaults: Options = {
 };
 
 export type Options = {
-  allowCredentials: false;
-  allowedHeaders: string[];
-  allowedMethods: string[];
-  allowedOrigins: string[];
-  exposedHeaders: string[];
-  maxAge: number;
+  allowCredentials?: boolean;
+  allowedHeaders?: string[];
+  allowedMethods?: string[];
+  allowedOrigins?: string[];
+  exposedHeaders?: string[];
+  maxAge?: number;
 };
