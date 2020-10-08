@@ -1,5 +1,5 @@
 {
-  "name": "zapt",
+  "name": "@depoja/zapt",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
