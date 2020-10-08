@@ -1,4 +1,4 @@
-import { PluginFn } from "../../lib";
+import { PluginFn } from "../../types";
 
 import { all, defaults, Options } from "./opts";
 

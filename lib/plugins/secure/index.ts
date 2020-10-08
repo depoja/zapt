@@ -1,4 +1,4 @@
-import { PluginFn, Headers, Map } from "../../lib";
+import { PluginFn, Headers, Map } from "../../types";
 
 type Options = Map;
 
