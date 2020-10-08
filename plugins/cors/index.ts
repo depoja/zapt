@@ -4,7 +4,7 @@ import { all, defaults, Options } from "./opts";
 
 // Reference implementation: https://github.com/rs/cors/blob/master/cors.go
 
-export const cors: PluginFn<Options> = (_, options) => {
+export const cors: PluginFn<Partial<Options>> = (_, options) => {
   const o = cleanOptions(options);
 
   return (req, res) => {
@@ -59,7 +59,7 @@ export const cors: PluginFn<Options> = (_, options) => {
   };
 };
 
-const cleanOptions = (opts: Options) => {
+const cleanOptions = (opts: Partial<Options>) => {
   const o = { ...defaults, ...(opts || {}) } as Options;
 
   // Handle wildcards
