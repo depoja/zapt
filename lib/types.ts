@@ -39,8 +39,11 @@ export type Response = {
 };
 
 export type Plugin = (req: Request, res: Response) => void;
-export type PluginFn = (fn: Instance, opts: PluginOpts) => Promise<Plugin | void> | (Plugin | void);
-export type PluginOpts = { [key: string]: any };
+export type PluginFn<T = Map> = (
+  fn: Instance,
+  opts: PluginOpts<T>
+) => Promise<Plugin | void> | (Plugin | void);
+export type PluginOpts<T = Map> = T;
 
 export type Route = (path: string, handler: Handler) => any;
 

@@ -37,10 +37,8 @@ export declare type Response = {
     send: (data: any, status?: keyof Codes, headers?: Headers) => void;
 };
 export declare type Plugin = (req: Request, res: Response) => void;
-export declare type PluginFn = (fn: Instance, opts: PluginOpts) => Promise<Plugin | void> | (Plugin | void);
-export declare type PluginOpts = {
-    [key: string]: any;
-};
+export declare type PluginFn<T = Map> = (fn: Instance, opts: PluginOpts<T>) => Promise<Plugin | void> | (Plugin | void);
+export declare type PluginOpts<T = Map> = T;
 export declare type Route = (path: string, handler: Handler) => any;
 export declare type Router = {
     any: Route;
