@@ -4,8 +4,8 @@ import { all, defaults, Options } from "./opts";
 
 // Reference implementation: https://github.com/rs/cors/blob/master/cors.go
 
-export const cors: PluginFn = (_, options) => {
-  const o = cleanOptions(options as Options);
+export const cors: PluginFn<Options> = (_, options) => {
+  const o = cleanOptions(options);
 
   return (req, res) => {
     const origin = req.header("Origin");

@@ -9,10 +9,10 @@ export type ServerError = Error & { code: keyof Codes };
 export type Handler = (req: Request, res: Response) => any;
 export type ErrorHandler = (req: Request, res: Response, err: ServerError) => any;
 
-type Map = { [k: string]: string | undefined };
+export type Map = { [k: string]: string | undefined };
 
 export type Headers = Map;
-export type State = { [k: string]: unknown };
+export type State = { [k: string]: any };
 
 export type Request = {
   method: () => string;
@@ -24,7 +24,7 @@ export type Request = {
   params: () => RequestParams;
   query: () => RequestQuery;
   url: () => RequestUrl;
-  state: (key: string, value?: unknown) => unknown | void;
+  state: (key: string, value?: any) => any | void;
 };
 
 export type RequestParams = Map;
@@ -39,11 +39,11 @@ export type Response = {
 };
 
 export type Plugin = (req: Request, res: Response) => void;
-export type PluginFn<T = Map> = (
+
+export type PluginFn<T = State> = (
   fn: Instance,
-  opts: PluginOpts<T>
+  opts: T
 ) => Promise<Plugin | void> | (Plugin | void);
-export type PluginOpts<T = Map> = T;
 
 export type Route = (path: string, handler: Handler) => any;
 
@@ -58,7 +58,7 @@ export type Router = {
 };
 
 export type Instance = Router & {
-  use: (plugin: PluginFn, opts?: PluginOpts) => Instance;
+  use: <T>(plugin: PluginFn<T>, opts?: T) => Instance;
 };
 
 export type App = Instance & {

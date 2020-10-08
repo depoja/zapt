@@ -8,12 +8,12 @@ export declare type ServerError = Error & {
 };
 export declare type Handler = (req: Request, res: Response) => any;
 export declare type ErrorHandler = (req: Request, res: Response, err: ServerError) => any;
-declare type Map = {
+export declare type Map = {
     [k: string]: string | undefined;
 };
 export declare type Headers = Map;
 export declare type State = {
-    [k: string]: unknown;
+    [k: string]: any;
 };
 export declare type Request = {
     method: () => string;
@@ -25,7 +25,7 @@ export declare type Request = {
     params: () => RequestParams;
     query: () => RequestQuery;
     url: () => RequestUrl;
-    state: (key: string, value?: unknown) => unknown | void;
+    state: (key: string, value?: any) => any | void;
 };
 export declare type RequestParams = Map;
 export declare type RequestQuery = ParsedUrlQuery;
@@ -37,8 +37,7 @@ export declare type Response = {
     send: (data: any, status?: keyof Codes, headers?: Headers) => void;
 };
 export declare type Plugin = (req: Request, res: Response) => void;
-export declare type PluginFn<T = Map> = (fn: Instance, opts: PluginOpts<T>) => Promise<Plugin | void> | (Plugin | void);
-export declare type PluginOpts<T = Map> = T;
+export declare type PluginFn<T = State> = (fn: Instance, opts: T) => Promise<Plugin | void> | (Plugin | void);
 export declare type Route = (path: string, handler: Handler) => any;
 export declare type Router = {
     any: Route;
@@ -50,10 +49,9 @@ export declare type Router = {
     put: Route;
 };
 export declare type Instance = Router & {
-    use: (plugin: PluginFn, opts?: PluginOpts) => Instance;
+    use: <T>(plugin: PluginFn<T>, opts?: T) => Instance;
 };
 export declare type App = Instance & {
     listen: (port?: number | string, cb?: (err?: boolean) => void) => void;
 };
 export declare type PluginResult = Promise<Plugin | void>;
-export {};

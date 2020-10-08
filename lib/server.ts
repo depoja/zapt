@@ -22,7 +22,7 @@ const createInstance = (server: Server, scopes = Scopes(), parent?: number) => {
     ...router,
     use: (plugin, opts) => {
       const pinst = createInstance(server, scopes, scope);
-      const definition = plugin(pinst, opts || {});
+      const definition = plugin(pinst, opts || ({} as any));
       const result = Promise.resolve(definition);
 
       scopes.register(scope, result);

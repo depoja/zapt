@@ -1,6 +1,8 @@
-import { PluginFn, Headers } from "../../lib";
+import { PluginFn, Headers, Map } from "../../lib";
 
-export const secure: PluginFn = (_, opts = {}) => {
+type Options = Map;
+
+export const secure: PluginFn<Options> = (_, opts = {}) => {
   return (_, res) => {
     const h: Headers = {};
 
