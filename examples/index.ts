@@ -1,7 +1,6 @@
 import fs from "fs";
 import zapt from "../lib";
-import { cors } from "../plugins/cors";
-import { secure } from "../plugins/secure";
+import { cors, secure } from "../lib/plugins";
 
 const app = zapt();
 app.use(cors, { allowedOrigins: ["*"] }).use(secure);
